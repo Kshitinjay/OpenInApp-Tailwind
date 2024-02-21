@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import FusionCharts from "fusioncharts";
 import Charts from "fusioncharts/fusioncharts.charts";
 import ReactFC from "react-fusioncharts";
+import {preProcessMeterBarData} from "../Service/MeterDataService";
 
 import ChartManipulation from "../Components/ChartManipulation";
 
@@ -12,7 +13,7 @@ const MeterApp = () => {
   const [data, setData] = useState([]);
   const [chart, setChart] = useState(null);
   const [chartType, setChartType] = useState("line");
-  const [selectedMeters, setSelectedMeters] = useState([]);
+  const [selectedMeters, setSelectedMeters] = useState(['M1']);
   const chartRef = useRef(null);
 
   const parsedData = [
@@ -41,46 +42,7 @@ const MeterApp = () => {
   useEffect(() => {
     // FusionCharts configuration
     if (data.length > 0) {
-      const chartConfig = {
-        type: chartType,
-        width: "100%",
-        height: "400",
-        dataFormat: "json",
-        dataSource: {
-          chart: {
-            caption: "App Publishing Trend",
-            subcaption: "2018-2022",
-            xaxisname: "Years",
-            yaxisname: "Total number of apps in store",
-            formatnumberscale: "1",
-            plottooltext:
-              "<b>$dataValue</b> units consumed <b>$seriesName</b> in $label",
-            theme: "candy",
-            drawcrossline: "1",
-          },
-          categories: [
-            {
-              category: data.map((timeInterval) => ({
-                label: timeInterval[0],
-              })),
-            },
-          ],
-          dataset: selectedMeters.sort().map(
-            (timeInterval, index) => {
-              console.log(`Mapping for ${timeInterval}`);
-              return {
-                seriesname: selectedMeters[index],
-                data: data.map((meterReading) => {
-                  const value = meterReading[index + 1];
-                  console.log(`Meter ${index + 1} reading: ${value}`);
-                  return { value };
-                }),
-              };
-            }
-          ),
-        },
-      };
-
+      const chartConfig = preProcessMeterBarData(data, selectedMeters, chartType);
       // Initialize FusionCharts
       setChart(new FusionCharts(chartConfig));
     }
@@ -117,6 +79,7 @@ const MeterApp = () => {
           handleChartTypeChange={handleChartTypeChange}
           handleMeterSelection={handleMeterSelection}
           data={data}
+          selectedMeters={selectedMeters}
         />
         <div id="chart-container"></div>
       </div>

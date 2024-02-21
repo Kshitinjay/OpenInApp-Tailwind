@@ -1,6 +1,11 @@
 import React, { useState } from "react";
 
-const ChartManipulation = ({ handleChartTypeChange, data, handleMeterSelection}) => {
+const ChartManipulation = ({
+  handleChartTypeChange,
+  data,
+  handleMeterSelection,
+  selectedMeters,
+}) => {
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
 
@@ -47,14 +52,15 @@ const ChartManipulation = ({ handleChartTypeChange, data, handleMeterSelection})
           onChange={(e) => handleEndTime(e)}
         />
         <div>
-          {["M1", "M2", "M3", "M4"].map((meter) => (
+          {["M1", "M2", "M3", "M4"].map((meter, index) => (
             <label key={meter} className="mr-2">
               <input
                 type="checkbox"
                 value={meter}
                 onChange={handleMeterSelection}
+                checked={selectedMeters.indexOf(meter) > -1}
               />
-              {meter}
+              {`Meter ${index + 1}`}
             </label>
           ))}
         </div>
