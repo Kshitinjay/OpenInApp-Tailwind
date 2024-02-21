@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 
-const ChartManipulation = ({ handleChartTypeChange, data}) => {
+const ChartManipulation = ({ handleChartTypeChange, data, handleMeterSelection}) => {
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
-  const [selectedMeters, setSelectedMeters] = useState([]);
 
   const handleStartTime = (e) => {
     setStartTime(e.target.value);
@@ -17,7 +16,6 @@ const ChartManipulation = ({ handleChartTypeChange, data}) => {
     e.preventDefault();
     console.log("StartTime: " + startTime);
     console.log("EndTime: " + endTime);
-    console.log("selectedMeters: " + selectedMeters);
   };
 
   return (
@@ -54,13 +52,7 @@ const ChartManipulation = ({ handleChartTypeChange, data}) => {
               <input
                 type="checkbox"
                 value={meter}
-                onChange={(e) =>
-                  setSelectedMeters((prevMeters) =>
-                    e.target.checked
-                      ? [...prevMeters, e.target.value]
-                      : prevMeters.filter((m) => m !== e.target.value)
-                  )
-                }
+                onChange={handleMeterSelection}
               />
               {meter}
             </label>

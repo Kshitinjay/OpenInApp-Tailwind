@@ -12,6 +12,7 @@ const MeterApp = () => {
   const [data, setData] = useState([]);
   const [chart, setChart] = useState(null);
   const [chartType, setChartType] = useState("line");
+  const [selectedMeters, setSelectedMeters] = useState([]);
   const chartRef = useRef(null);
 
   const parsedData = [
@@ -64,18 +65,19 @@ const MeterApp = () => {
               })),
             },
           ],
-          dataset: ["Meter 1", "Meter 2", "Meter 3"].map((timeInterval, index) => {
-            console.log(`Mapping for ${timeInterval}`);
-            return {
-                seriesname: `Meter ${index + 1}`,
+          dataset: selectedMeters.sort().map(
+            (timeInterval, index) => {
+              console.log(`Mapping for ${timeInterval}`);
+              return {
+                seriesname: selectedMeters[index],
                 data: data.map((meterReading) => {
-                    const value = meterReading[index + 1];
-                    console.log(`Meter ${index + 1} reading: ${value}`);
-                    return { value };
+                  const value = meterReading[index + 1];
+                  console.log(`Meter ${index + 1} reading: ${value}`);
+                  return { value };
                 }),
-            };
-        }),
-        
+              };
+            }
+          ),
         },
       };
 
@@ -88,7 +90,7 @@ const MeterApp = () => {
         chart.dispose();
       }
     };
-  }, [data, chartType]);
+  }, [data, chartType, selectedMeters]);
 
   useEffect(() => {
     if (chart) {
@@ -96,6 +98,14 @@ const MeterApp = () => {
       chart.render("chart-container");
     }
   }, [chart]);
+
+  const handleMeterSelection = (e) => {
+    setSelectedMeters((prevMeters) =>
+      e.target.checked
+        ? [...prevMeters, e.target.value]
+        : prevMeters.filter((m) => m !== e.target.value)
+    );
+  };
 
   return (
     data.length && (
@@ -105,6 +115,7 @@ const MeterApp = () => {
         </h1>
         <ChartManipulation
           handleChartTypeChange={handleChartTypeChange}
+          handleMeterSelection={handleMeterSelection}
           data={data}
         />
         <div id="chart-container"></div>
