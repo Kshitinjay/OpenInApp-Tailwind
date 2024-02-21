@@ -1,9 +1,10 @@
 import React from "react";
-import { BrowserRouter as Router, Link, Route, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import "./App.css";
 
 import LandingPage from "./Components/LandingPage";
 import AdminDashboard from "./Components/AdminDashboard";
+import MeterApp from "./Components/MeterApp";
 
 function App() {
   const handleChange = () => {
@@ -20,6 +21,7 @@ function App() {
             element={<LandingPage handleChange={handleChange} />}
           />
           <Route exact path={"/dashboard"} element={<AdminDashboard />} />
+          <Route path={"/meter"} element={<MeterApp />} />
         </Routes>
       </Router>
     </>
