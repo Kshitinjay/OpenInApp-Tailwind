@@ -1,4 +1,4 @@
-export const preProcessMeterBarData = (data, selectedMeters, chartType) => {
+export const preProcessChartData = (data, selectedMeters, chartType) => {
   const chartConfig = {
     theme: "gammel",
     type: chartType,
@@ -7,16 +7,13 @@ export const preProcessMeterBarData = (data, selectedMeters, chartType) => {
     dataFormat: "json",
     dataSource: {
       chart: {
-        caption: "App Publishing Trend",
-        subcaption: "2018-2022",
+        caption: "Energy Consumption",
         xaxisname: "Years",
-        yaxisname: "Total number of apps in store",
+        yaxisname: "Units consumed by each",
         formatnumberscale: "1",
         plottooltext:
           "<b>$dataValue</b> units consumed <b>$seriesName</b> in $label",
-        theme: "candy",
         drawcrossline: "1",
-        legendItemClicked: "return false;",
       },
       categories: [
         {

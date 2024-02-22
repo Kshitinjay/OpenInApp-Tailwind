@@ -2,10 +2,10 @@ import React, { useState, useEffect, useRef } from "react";
 import FusionCharts from "fusioncharts";
 import Charts from "fusioncharts/fusioncharts.charts";
 import ReactFC from "react-fusioncharts";
-import { preProcessMeterBarData } from "../Service/MeterDataService";
+import { preProcessChartData } from "../Service/MeterDataService";
+import { Alert, Modal, Box } from "@mui/material";
 
 import ChartManipulation from "../Components/ChartManipulation";
-import Alert from "../Components/Alert";
 
 // Adding the chart as dependency to the core FusionCharts
 ReactFC.fcRoot(FusionCharts, Charts);
@@ -15,6 +15,7 @@ const MeterApp = () => {
   const [chart, setChart] = useState(null);
   const [chartType, setChartType] = useState("msline");
   const [selectedMeters, setSelectedMeters] = useState([1]);
+  const [openModal, setModalOpen] = useState(false);
   const chartRef = useRef(null);
 
   const parsedData = [
@@ -27,6 +28,18 @@ const MeterApp = () => {
     ["21-11-2023 10:06", 289, 17, 131, 522, 1305],
     ["21-11-2023 10:08", 285, 103, 96, 570, 1319],
   ];
+
+  const modalStyle = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: 400,
+    bgcolor: "background.paper",
+    boxShadow: 24,
+    borderRadius: '8px',
+    p: 4,
+  };
 
   useEffect(() => {
     const slicedData = parsedData.slice(1);
@@ -43,11 +56,7 @@ const MeterApp = () => {
   useEffect(() => {
     // FusionCharts configuration
     if (data.length > 0) {
-      const chartConfig = preProcessMeterBarData(
-        data,
-        selectedMeters,
-        chartType
-      );
+      const chartConfig = preProcessChartData(data, selectedMeters, chartType);
       // Initialize FusionCharts
       setChart(new FusionCharts(chartConfig));
     }
@@ -78,26 +87,38 @@ const MeterApp = () => {
     console.log("Alert clicked");
   };
 
+  const toggleModal = () => {
+    setModalOpen(!openModal);
+  };
+
   return (
     data.length && (
       <div className="container mx-auto">
         <h1 className="text-2xl font-bold text-center my-4">
           Electricity Metering Data
         </h1>
-        <ChartManipulation
-          handleChartTypeChange={handleChartTypeChange}
-          handleMeterSelection={handleMeterSelection}
-          data={data}
-          selectedMeters={selectedMeters}
-        />
-        <div id="chart-container"></div>
+        <div id="chart-container" className="mt-10"></div>
+        <button className={`mt-2 bg-customBlue rounded-lg py-2 text-white font-medium p-2`} onClick={toggleModal}>Configure Chart</button>
+        <Modal
+          open={openModal}
+          onClose={toggleModal}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box sx={modalStyle}>
+            <ChartManipulation
+              handleChartTypeChange={handleChartTypeChange}
+              handleMeterSelection={handleMeterSelection}
+              data={data}
+              selectedMeters={selectedMeters}
+              chartType={chartType}
+            />
+          </Box>
+        </Modal>
         <div className="fixed top-0 right-10 mt-8">
-          <Alert
-            id={1}
-            timestamp="21-11-2023 10:00"
-            description="Total power consumption exceeded 1000W"
-            onClick={handleAlertClick} // Add a function to handle alert click
-          />
+          <Alert severity="warning" onClose={handleAlertClick}>
+            This Alert displays the default close icon.
+          </Alert>
         </div>
       </div>
     )

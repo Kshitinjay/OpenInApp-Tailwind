@@ -1,10 +1,12 @@
 import React, { useState } from "react";
+import { InputLabel, MenuItem, Select, FormControl } from "@mui/material";
 
 const ChartManipulation = ({
   handleChartTypeChange,
   data,
   handleMeterSelection,
   selectedMeters,
+  chartType,
 }) => {
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
@@ -31,13 +33,19 @@ const ChartManipulation = ({
 
   return (
     <div className="my-4">
-      <label htmlFor="chartType" className="mr-2">
-        Chart Type:
-      </label>
-      <select id="chartType" onChange={handleChartTypeChange}>
-        <option value="msline">Line</option>
-        <option value="mscolumn2d">Bar</option>
-      </select>
+      <FormControl fullWidth>
+        <InputLabel id="demo-simple-select-label">Chart Type</InputLabel>
+        <Select
+          labelId="demo-simple-select-label"
+          id="demo-simple-select"
+          value={chartType}
+          label="Chart Type"
+          onChange={handleChartTypeChange}
+        >
+          <MenuItem value="msline">Line chart</MenuItem>
+          <MenuItem value="mscolumn2d">Bar chart</MenuItem>
+        </Select>
+      </FormControl>
       <form onSubmit={handleTimeWindowSubmit}>
         <label htmlFor="startTime" className="mr-2">
           Start Time:
