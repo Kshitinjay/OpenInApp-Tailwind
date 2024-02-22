@@ -7,9 +7,12 @@ const ChartManipulation = ({
   handleMeterSelection,
   selectedMeters,
   chartType,
+  dateSelectionFilteration,
+  startDateRange,
+  endDateRange
 }) => {
-  const [startTime, setStartTime] = useState("");
-  const [endTime, setEndTime] = useState("");
+  const [startTime, setStartTime] = useState(startDateRange);
+  const [endTime, setEndTime] = useState(endDateRange);
   const meterList = [
     { name: "Meter 1", value: 1 },
     { name: "Meter 2", value: 2 },
@@ -17,18 +20,22 @@ const ChartManipulation = ({
     { name: "Meter 4", value: 4 },
   ];
 
+  const formatDateToChart =(date)=>{
+    return `${date.getDate().toString().padStart(2, '0')}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getFullYear().toString().slice(-2)} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
+  }
+
   const handleStartTime = (e) => {
     setStartTime(e.target.value);
+    const date = new Date(e.target.value);
+    const formattedDate = formatDateToChart(date);
+    dateSelectionFilteration(formattedDate,'start');
   };
 
   const handleEndTime = (e) => {
     setEndTime(e.target.value);
-  };
-
-  const handleTimeWindowSubmit = (e) => {
-    e.preventDefault();
-    console.log("StartTime: " + startTime);
-    console.log("EndTime: " + endTime);
+    const date = new Date(e.target.value);
+    const formattedDate = formatDateToChart(date);
+    dateSelectionFilteration(formattedDate,'end');
   };
 
   return (
@@ -54,7 +61,7 @@ const ChartManipulation = ({
           type="datetime-local"
           id="startTime"
           value={startTime}
-          onChange={(e) => handleStartTime(e)}
+          onChange={handleStartTime}
         />
         <label htmlFor="endTime" className="mr-2">
           End Time:
@@ -63,7 +70,7 @@ const ChartManipulation = ({
           type="datetime-local"
           id="endTime"
           value={endTime}
-          onChange={(e) => handleEndTime(e)}
+          onChange={handleEndTime}
         />
       </div>
       <div className="flex flex-col mt-3">

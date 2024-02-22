@@ -16,6 +16,9 @@ const MeterApp = () => {
   const [chartType, setChartType] = useState("msline");
   const [selectedMeters, setSelectedMeters] = useState([1]);
   const [openModal, setModalOpen] = useState(false);
+  const [chartStartDate, setChartStartDate] = useState();
+  const [chartEndDate, setChartEndDate] = useState();
+
   const chartRef = useRef(null);
 
   const parsedData = [
@@ -36,7 +39,7 @@ const MeterApp = () => {
     transform: "translate(-50%, -50%)",
     bgcolor: "background.paper",
     boxShadow: 24,
-    borderRadius: '8px',
+    borderRadius: "8px",
     p: 4,
   };
 
@@ -44,13 +47,6 @@ const MeterApp = () => {
     const slicedData = parsedData.slice(1);
     setData(slicedData);
   }, []);
-
-  const handleChartTypeChange = (e) => {
-    // Change chart type (line or bar)
-    if (chart) {
-      setChartType(e.target.value);
-    }
-  };
 
   useEffect(() => {
     // FusionCharts configuration
@@ -74,12 +70,33 @@ const MeterApp = () => {
     }
   }, [chart]);
 
+  useEffect(() => {
+    // filter chart data here according to date range
+    console.log(chartStartDate);
+    console.log(chartEndDate);
+  }, [chartStartDate, chartEndDate]);
+
+  const handleChartTypeChange = (e) => {
+    // Change chart type (line or bar)
+    if (chart) {
+      setChartType(e.target.value);
+    }
+  };
+
   const handleMeterSelection = (e, met) => {
     setSelectedMeters((prevMeters) =>
       e.target.checked
         ? [...prevMeters, met]
         : prevMeters.filter((m) => m !== met)
     );
+  };
+
+  const dateSelectionFilteration = (selectedDate, startOrEnd) => {
+    if (startOrEnd == "start") {
+      setChartStartDate(selectedDate);
+    } else {
+      setChartEndDate(selectedDate);
+    }
   };
 
   const handleAlertClick = () => {
@@ -90,6 +107,22 @@ const MeterApp = () => {
     setModalOpen(!openModal);
   };
 
+  const formatDateToSet = (dates) => {
+    const inputDateString = dates;
+
+    const [datePart, timePart] = inputDateString.split(" ");
+
+    const [day, month, year] = datePart.split("-").map((part) => parseInt(part));
+
+    const [hours, minutes] = timePart.split(":").map((part) => parseInt(part));
+
+    const date = new Date(year + 2000, month - 1, day + 1, hours, minutes);
+
+    const formattedDate = date.toISOString().slice(0, 16);
+
+    return formattedDate;
+  };
+
   return (
     data.length && (
       <div className="container mx-auto">
@@ -97,7 +130,12 @@ const MeterApp = () => {
           Electricity Metering Data
         </h1>
         <div id="chart-container" className="mt-10"></div>
-        <button className={`mt-2 bg-customBlue rounded-lg py-2 text-white font-medium p-2`} onClick={toggleModal}>Configure Chart</button>
+        <button
+          className={`mt-2 bg-customBlue rounded-lg py-2 text-white font-medium p-2`}
+          onClick={toggleModal}
+        >
+          Configure Chart
+        </button>
         <Modal
           open={openModal}
           onClose={toggleModal}
@@ -111,6 +149,9 @@ const MeterApp = () => {
               data={data}
               selectedMeters={selectedMeters}
               chartType={chartType}
+              dateSelectionFilteration={dateSelectionFilteration}
+              startDateRange={chartStartDate && formatDateToSet(chartStartDate)}
+              endDateRange={chartEndDate && formatDateToSet(chartEndDate)}
             />
           </Box>
         </Modal>
