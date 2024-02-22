@@ -8,6 +8,12 @@ const ChartManipulation = ({
 }) => {
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
+  const meterList = [
+    { name: "Meter 1", value: 1 },
+    { name: "Meter 2", value: 2 },
+    { name: "Meter 3", value: 3 },
+    { name: "Meter 4", value: 4 },
+  ];
 
   const handleStartTime = (e) => {
     setStartTime(e.target.value);
@@ -52,13 +58,13 @@ const ChartManipulation = ({
           onChange={(e) => handleEndTime(e)}
         />
         <div>
-          {["M1", "M2", "M3", "M4"].map((meter, index) => (
-            <label key={meter} className="mr-2">
+          {meterList.map((meter, index) => (
+            <label key={meter.value} className="mr-2">
               <input
                 type="checkbox"
-                value={meter}
-                onChange={handleMeterSelection}
-                checked={selectedMeters.indexOf(meter) > -1}
+                value={meter.value}
+                onChange={(e) => handleMeterSelection(e, meter.value)}
+                checked={selectedMeters.indexOf(meter.value) > -1}
               />
               {`Meter ${index + 1}`}
             </label>

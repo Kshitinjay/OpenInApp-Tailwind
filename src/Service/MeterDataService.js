@@ -25,13 +25,12 @@ export const preProcessMeterBarData = (data, selectedMeters, chartType) => {
           })),
         },
       ],
-      dataset: selectedMeters.sort().map((timeInterval, index) => {
-        console.log(`Mapping for ${timeInterval}`);
+      dataset: selectedMeters.sort().map((meterNo, index) => {
+        console.log(`Mapping for ${meterNo}`);
         return {
-          seriesname: selectedMeters[index],
+          seriesname: selectedMeters[meterNo],
           data: data.map((meterReading) => {
-            const value = meterReading[index + 1];
-            console.log(`Meter ${index + 1} reading: ${value}`);
+            const value = meterReading[meterNo];
             return { value };
           }),
         };
@@ -40,4 +39,3 @@ export const preProcessMeterBarData = (data, selectedMeters, chartType) => {
   };
   return chartConfig;
 };
-

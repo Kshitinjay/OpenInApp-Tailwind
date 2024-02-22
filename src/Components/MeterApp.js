@@ -14,7 +14,7 @@ const MeterApp = () => {
   const [data, setData] = useState([]);
   const [chart, setChart] = useState(null);
   const [chartType, setChartType] = useState("msline");
-  const [selectedMeters, setSelectedMeters] = useState(["M1"]);
+  const [selectedMeters, setSelectedMeters] = useState([1]);
   const chartRef = useRef(null);
 
   const parsedData = [
@@ -66,11 +66,11 @@ const MeterApp = () => {
     }
   }, [chart]);
 
-  const handleMeterSelection = (e) => {
+  const handleMeterSelection = (e, met) => {
     setSelectedMeters((prevMeters) =>
       e.target.checked
-        ? [...prevMeters, e.target.value]
-        : prevMeters.filter((m) => m !== e.target.value)
+        ? [...prevMeters, met]
+        : prevMeters.filter((m) => m !== met)
     );
   };
 
@@ -91,7 +91,7 @@ const MeterApp = () => {
           selectedMeters={selectedMeters}
         />
         <div id="chart-container"></div>
-        <div className="mt-8">
+        <div className="fixed top-0 right-10 mt-8">
           <Alert
             id={1}
             timestamp="21-11-2023 10:00"
