@@ -2,9 +2,10 @@ import React, { useState, useEffect, useRef } from "react";
 import FusionCharts from "fusioncharts";
 import Charts from "fusioncharts/fusioncharts.charts";
 import ReactFC from "react-fusioncharts";
-import {preProcessMeterBarData} from "../Service/MeterDataService";
+import { preProcessMeterBarData } from "../Service/MeterDataService";
 
 import ChartManipulation from "../Components/ChartManipulation";
+import Alert from "../Components/Alert";
 
 // Adding the chart as dependency to the core FusionCharts
 ReactFC.fcRoot(FusionCharts, Charts);
@@ -12,8 +13,8 @@ ReactFC.fcRoot(FusionCharts, Charts);
 const MeterApp = () => {
   const [data, setData] = useState([]);
   const [chart, setChart] = useState(null);
-  const [chartType, setChartType] = useState("line");
-  const [selectedMeters, setSelectedMeters] = useState(['M1']);
+  const [chartType, setChartType] = useState("msline");
+  const [selectedMeters, setSelectedMeters] = useState(["M1"]);
   const chartRef = useRef(null);
 
   const parsedData = [
@@ -42,7 +43,11 @@ const MeterApp = () => {
   useEffect(() => {
     // FusionCharts configuration
     if (data.length > 0) {
-      const chartConfig = preProcessMeterBarData(data, selectedMeters, chartType);
+      const chartConfig = preProcessMeterBarData(
+        data,
+        selectedMeters,
+        chartType
+      );
       // Initialize FusionCharts
       setChart(new FusionCharts(chartConfig));
     }
@@ -69,6 +74,10 @@ const MeterApp = () => {
     );
   };
 
+  const handleAlertClick = () => {
+    console.log("Alert clicked");
+  };
+
   return (
     data.length && (
       <div className="container mx-auto">
@@ -82,6 +91,14 @@ const MeterApp = () => {
           selectedMeters={selectedMeters}
         />
         <div id="chart-container"></div>
+        <div className="mt-8">
+          <Alert
+            id={1}
+            timestamp="21-11-2023 10:00"
+            description="Total power consumption exceeded 1000W"
+            onClick={handleAlertClick} // Add a function to handle alert click
+          />
+        </div>
       </div>
     )
   );

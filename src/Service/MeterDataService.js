@@ -1,5 +1,6 @@
 export const preProcessMeterBarData = (data, selectedMeters, chartType) => {
   const chartConfig = {
+    theme: "gammel",
     type: chartType,
     width: "100%",
     height: "400",
@@ -39,3 +40,4 @@ export const preProcessMeterBarData = (data, selectedMeters, chartType) => {
   };
   return chartConfig;
 };
+

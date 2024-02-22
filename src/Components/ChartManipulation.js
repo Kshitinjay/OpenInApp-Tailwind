@@ -29,7 +29,7 @@ const ChartManipulation = ({
         Chart Type:
       </label>
       <select id="chartType" onChange={handleChartTypeChange}>
-        <option value="line">Line</option>
+        <option value="msline">Line</option>
         <option value="mscolumn2d">Bar</option>
       </select>
       <form onSubmit={handleTimeWindowSubmit}>
